@@ -4,28 +4,105 @@
     <meta charset="UTF-8" />
     <title>Galerie flashdisků a disků</title>
     <style>
+        body {
+            background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #2d3a4b;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
         .gallery {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 24px;
+            justify-content: center;
+            padding: 32px 0;
+        }
+        .gallery figure {
+            margin: 0;
+            text-align: center;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(60,60,100,0.08);
+            padding: 16px 12px 12px 12px;
+            transition: box-shadow 0.2s;
+        }
+        .gallery figure:hover {
+            box-shadow: 0 8px 32px rgba(60,60,100,0.16);
         }
         .gallery img {
             width: 200px;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
         }
         .gallery img:hover {
             transform: scale(1.05);
-        }
-        .gallery figure {
-            margin: 0;
-            text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
         }
         .gallery figcaption {
-            font-size: 0.9em;
-            margin-top: 4px;
+            font-size: 0.95em;
+            margin-top: 8px;
+            color: #4b5563;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(30, 41, 59, 0.85);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            background: #fff;
+            padding: 16px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .modal-content img {
+            max-width: 80vw;
+            max-height: 70vh;
+            border-radius: 8px;
+        }
+        .modal-caption {
+            margin-top: 12px;
+            color: #374151;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        .modal-close {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+            font-size: 2em;
+            color: #64748b;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: #ef4444;
         }
     </style>
 </head>
@@ -92,7 +169,47 @@
             <img src="img/Flashdisk_NOARK.png" alt="Flashdisk_NOARK">
             <figcaption>Flashdisk_NOARK</figcaption>
         </figure>
-        <!-- Přidej další obrázky podle potřeby -->
     </div>
+    <!-- Modal for image preview -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose" aria-label="Zavřít">&times;</button>
+            <img id="modalImg" src="" alt="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+    <script>
+        // Modal logic
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+        const modalCaption = document.getElementById('modalCaption');
+        const modalClose = document.getElementById('modalClose');
+        document.querySelectorAll('.gallery img').forEach(img => {
+            img.addEventListener('click', () => {
+                modal.classList.add('active');
+                modalImg.src = img.src;
+                modalImg.alt = img.alt;
+                // Najdi popisek podle obrázku
+                const figcaption = img.parentElement.querySelector('figcaption');
+                modalCaption.textContent = figcaption ? figcaption.textContent : '';
+            });
+        });
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+            modalImg.src = '';
+        });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                modalImg.src = '';
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                modal.classList.remove('active');
+                modalImg.src = '';
+            }
+        });
+    </script>
 </body>
 </html>

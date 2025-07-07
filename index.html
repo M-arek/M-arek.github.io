@@ -21,19 +21,22 @@
         }
         .gallery {
             display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
             padding: 32px 0;
         }
         .gallery figure {
             margin: 0;
-            text-align: center;
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 4px 16px rgba(60,60,100,0.08);
             padding: 16px 12px 12px 12px;
             transition: box-shadow 0.2s;
+            width: 224px; /* 200px obrázek + padding */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .gallery figure:hover {
             box-shadow: 0 8px 32px rgba(60,60,100,0.16);
@@ -45,6 +48,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            display: block;
         }
         .gallery img:hover {
             transform: scale(1.05);
@@ -54,6 +58,10 @@
             font-size: 0.95em;
             margin-top: 8px;
             color: #4b5563;
+            word-break: break-word;
+            width: 200px;
+            text-align: center;
+            white-space: normal;
         }
         /* Modal styles */
         .modal {

@@ -2,205 +2,260 @@
 ---
 <!DOCTYPE html>
 <html lang="cs">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Galerie flashdisků a disků</title>
     <style>
-        body {
-            background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            animation: bg-move 10s ease-in-out infinite alternate;
+      body {
+        background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+        font-family: 'Segoe UI'
+        , Arial
+        , sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        animation: bg-move 10s ease-in-out infinite alternate;
+      }
+      @keyframes bg-move {
+        0% {
+          background-position: 0 50%;
         }
-        @keyframes bg-move {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+        100% {
+          background-position: 100% 50%;
         }
-        h1 {
-            text-align: center;
-            color: #2d3a4b;
-            margin-top: 32px;
-            margin-bottom: 16px;
-            letter-spacing: 1px;
-            opacity: 0;
-            transform: translateY(-30px);
-            animation: fadeInDown 1s ease forwards;
+      }
+      h1 {
+        text-align: center;
+        color: #2d3a4b;
+        margin-top: 32px;
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+        opacity: 0;
+        transform: translateY(-30px);
+        animation: fadeInDown 1s ease forwards;
+      }
+      h2 {
+        text-align: center;
+        color: #334155;
+        margin-top: 40px;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+      }
+      @keyframes fadeInDown {
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        h2 {
-            text-align: center;
-            color: #334155;
-            margin-top: 40px;
-            margin-bottom: 16px;
-            letter-spacing: 0.5px;
+      }
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        justify-content: center;
+        padding: 32px 0;
+      }
+      .gallery figure {
+        margin: 0;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(60, 60, 100, 0.08);
+        padding: 16px 12px 12px;
+        transition: box-shadow 0.2s
+        , transform 0.4s cubic-bezier(0.25,0.8,0.25,1);
+        width: 224px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(40px) scale(0.97);
+        animation: fadeInUp 0.8s ease forwards;
+      }
+      .gallery figure:hover {
+        box-shadow: 0 8px 32px rgba(60, 60, 100, 0.16);
+        transform: scale(1.04) translateY(-4px);
+      }
+      .gallery figure:nth-child(n) {
+        animation-delay: 0.1s;
+      }
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
         }
-        @keyframes fadeInDown {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+      }
+      .gallery img {
+        width: 200px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s
+        , box-shadow 0.2s;
+        cursor: pointer;
+        display: block;
+      }
+      .gallery img:hover {
+        transform: scale(1.05) rotate(-2deg);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+      }
+      .gallery figcaption {
+        font-size: 0.95em;
+        margin-top: 8px;
+        color: #4b5563;
+        word-break: break-word;
+        width: 200px;
+        text-align: center;
+        white-space: normal;
+        opacity: 0;
+        animation: fadeInText 0.8s 0.5s forwards;
+      }
+      @keyframes fadeInText {
+        to {
+          opacity: 1;
         }
-        .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 32px;
-            justify-content: center;
-            padding: 32px 0;
+      }
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(30, 41, 59, 0.85);
+        align-items: center;
+        justify-content: center;
+        animation: modalFadeIn 0.3s;
+      }
+      .modal.active {
+        display: flex;
+      }
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
         }
-        .gallery figure {
-            margin: 0;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(60,60,100,0.08);
-            padding: 16px 12px 12px 12px;
-            transition: box-shadow 0.2s, transform 0.4s cubic-bezier(.25,.8,.25,1);
-            width: 224px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(40px) scale(0.97);
-            animation: fadeInUp 0.8s ease forwards;
+        to {
+          opacity: 1;
         }
-        .gallery figure:hover {
-            box-shadow: 0 8px 32px rgba(60,60,100,0.16);
-            transform: scale(1.04) translateY(-4px);
+      }
+      .modal-content {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        background: #fff;
+        padding: 16px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: modalContentIn 0.4s;
+      }
+      @keyframes modalContentIn {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
         }
-        .gallery figure:nth-child(n) { animation-delay: 0.1s; }
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+        to {
+          transform: scale(1);
+          opacity: 1;
         }
-        .gallery img {
-            width: 200px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            display: block;
-        }
-        .gallery img:hover {
-            transform: scale(1.05) rotate(-2deg);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-        }
-        .gallery figcaption {
-            font-size: 0.95em;
-            margin-top: 8px;
-            color: #4b5563;
-            word-break: break-word;
-            width: 200px;
-            text-align: center;
-            white-space: normal;
-            opacity: 0;
-            animation: fadeInText 0.8s 0.5s forwards;
-        }
-        @keyframes fadeInText {
-            to { opacity: 1; }
-        }
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(30, 41, 59, 0.85);
-            align-items: center;
-            justify-content: center;
-            animation: modalFadeIn 0.3s;
-        }
-        .modal.active {
-            display: flex;
-        }
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .modal-content {
-            max-width: 90vw;
-            max-height: 90vh;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            background: #fff;
-            padding: 16px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: modalContentIn 0.4s;
-        }
-        @keyframes modalContentIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .modal-content img {
-            max-width: 80vw;
-            max-height: 70vh;
-            border-radius: 8px;
-        }
-        .modal-caption {
-            margin-top: 12px;
-            color: #374151;
-            font-size: 1.1em;
-            text-align: center;
-        }
-        .modal-close {
-            position: absolute;
-            top: 8px;
-            right: 16px;
-            font-size: 2em;
-            color: #64748b;
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .modal-close:hover {
-            color: #ef4444;
-        }
-        .modal-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 2.5em;
-            color: #64748b;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1010;
-            padding: 0 16px;
-            transition: color 0.2s;
-            user-select: none;
-        }
-        .modal-arrow:hover {
-            color: #2563eb;
-        }
-        .modal-arrow.left { left: 0; }
-        .modal-arrow.right { right: 0; }
+      }
+      .modal-content img {
+        max-width: 80vw;
+        max-height: 70vh;
+        border-radius: 8px;
+        transition: transform 0.2s;
+        cursor: zoom-in;
+        user-select: none;
+      }
+      .modal-caption {
+        margin-top: 12px;
+        color: #374151;
+        font-size: 1.1em;
+        text-align: center;
+      }
+      .modal-close {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        font-size: 2em;
+        color: #64748b;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .modal-close:hover {
+        color: #ef4444;
+      }
+      .modal-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2.5em;
+        color: #64748b;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 1010;
+        padding: 0 16px;
+        transition: color 0.2s;
+        user-select: none;
+      }
+      .modal-arrow:hover {
+        color: #2563eb;
+      }
+      .modal-arrow.left {
+        left: 0;
+      }
+      .modal-arrow.right {
+        right: 0;
+      }
+      #charts-gallery img {
+        width: 400px;
+        height: auto;
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+      }
+      #charts-gallery figure {
+        width: 424px;
+        /* 400px obrázek + padding */
+        max-width: 100%;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Galerie flashdisků a disků</h1>
     <div class="gallery" id="main-gallery">
-        <!-- Hlavní obrázky budou vloženy zde -->
+      <!-- Hlavní obrázky budou vloženy zde -->
     </div>
     <h2>Grafy porovnání rychlostí</h2>
     <div class="gallery" id="charts-gallery">
-        <!-- Grafy budou vloženy zde -->
+      <!-- Grafy budou vloženy zde -->
     </div>
     <!-- Modal for image preview -->
     <div class="modal" id="modal">
-        <button class="modal-arrow left" id="modalPrev" aria-label="Předchozí">&#8592;</button>
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose" aria-label="Zavřít">&times;</button>
-            <img id="modalImg" src="" alt="">
-            <div class="modal-caption" id="modalCaption"></div>
-        </div>
-        <button class="modal-arrow right" id="modalNext" aria-label="Další">&#8594;</button>
+      <button
+        class="modal-arrow left"
+        id="modalPrev"
+        aria-label="Předchozí">&#8592;</button>
+      <div class="modal-content">
+        <button
+          class="modal-close"
+          id="modalClose"
+          aria-label="Zavřít">&times;</button>
+        <img
+          id="modalImg"
+          src=""
+          alt="">
+        <div class="modal-caption" id="modalCaption"></div>
+      </div>
+      <button
+        class="modal-arrow right"
+        id="modalNext"
+        aria-label="Další">&#8594;</button>
     </div>
     <script>
         // Seznam obrázků (automaticky generovaný Jekyllem)
@@ -218,12 +273,12 @@
                 {% endif %}
             {% endfor %}
         ];
-
+      
         // Rozdělení na hlavní a grafy
         const chartNames = ["Obrázek3", "Obrázek4", "Obrázek5", "Obrázek6"];
         const charts = allImages.filter(img => chartNames.includes(img.raw.replace(/\.[^/.]+$/, "")));
         const mainImages = allImages.filter(img => !chartNames.includes(img.raw.replace(/\.[^/.]+$/, "")));
-
+      
         // Vložení obrázků do galerií
         function renderGallery(images, galleryId) {
             const gallery = document.getElementById(galleryId);
@@ -236,7 +291,7 @@
         }
         renderGallery(mainImages, "main-gallery");
         renderGallery(charts, "charts-gallery");
-
+      
         // Modal logic s přepínáním
         let modal = document.getElementById('modal');
         let modalImg = document.getElementById('modalImg');
@@ -246,21 +301,121 @@
         let modalNext = document.getElementById('modalNext');
         let currentGallery = [];
         let currentIndex = 0;
-
+        let zoomLevel = 1;
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let imgOffset = { x: 0, y: 0 };
+        let wasDragged = false;
+      
         function openModal(images, index) {
             currentGallery = images;
             currentIndex = index;
             showModalImage();
             modal.classList.add('active');
         }
-
+      
         function showModalImage() {
             const img = currentGallery[currentIndex];
             modalImg.src = img.src;
             modalImg.alt = img.name;
             modalCaption.textContent = img.name;
+            zoomLevel = 1;
+            // Odstraň tento řádek, aby se imgOffset neresetoval při každém obrázku:
+            // imgOffset = { x: 0, y: 0 };
+            modalImg.style.transform = "scale(1)";
+            modalImg.style.cursor = "zoom-in";
+            modalImg.style.transition = "transform 0.2s";
+            modalImg.style.objectPosition = "center center";
+            modalImg.style.position = "";
+            modalImg.style.left = "";
+            modalImg.style.top = "";
         }
-
+      
+        // Zoomování klikem
+        modalImg.addEventListener('click', function(e) {
+            if (wasDragged) {
+                wasDragged = false;
+                return; // Pokud byl obrázek tažen, nezoomuj
+            }
+            if (zoomLevel === 1) {
+                zoomLevel = 2;
+                imgOffset = { x: 0, y: 0 }; // ← resetuj pozici při přiblížení
+                modalImg.style.cursor = "grab";
+            } else {
+                zoomLevel = 1;
+                modalImg.style.left = "";
+                modalImg.style.top = "";
+                modalImg.style.position = "";
+                modalImg.style.cursor = "zoom-in";
+            }
+            updateTransform();
+        });
+      
+        // Zoomování kolečkem myši
+        modalImg.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            const prevZoom = zoomLevel;
+            if (e.deltaY < 0) {
+                zoomLevel = Math.min(zoomLevel + 0.1, 5);
+            } else {
+                zoomLevel = Math.max(zoomLevel - 0.1, 1);
+            }
+            // Resetuj pozici při přechodu z 1 na větší zoom
+            if (prevZoom === 1 && zoomLevel > 1) {
+                imgOffset = { x: 0, y: 0 };
+            }
+            // Resetuj pozici při návratu na 1
+            if (zoomLevel === 1) {
+                imgOffset = { x: 0, y: 0 };
+            }
+            updateTransform();
+        });
+      
+        // Drag & move při přiblížení
+        modalImg.addEventListener('mousedown', function(e) {
+            if (zoomLevel === 1) return;
+            e.preventDefault();
+            isDragging = true;
+            wasDragged = false;
+            dragStart = { x: e.clientX, y: e.clientY, ox: imgOffset.x, oy: imgOffset.y };
+            modalImg.style.cursor = "grabbing";
+            modalImg.style.position = "relative";
+            document.body.style.userSelect = "none";
+      
+            function onMouseMove(ev) {
+                if (!isDragging) return;
+                imgOffset.x = dragStart.ox + (ev.clientX - dragStart.x);
+                imgOffset.y = dragStart.oy + (ev.clientY - dragStart.y);
+                updateTransform();
+                wasDragged = true;
+            }
+            function onMouseUp() {
+                isDragging = false;
+                modalImg.style.cursor = "grab";
+                document.body.style.userSelect = "";
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+            }
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+        });
+      
+        function updateTransform() {
+            modalImg.style.transform = `scale(${zoomLevel})`;
+            if (zoomLevel > 1) {
+                modalImg.style.position = "relative";
+                modalImg.style.left = imgOffset.x + "px";
+                modalImg.style.top = imgOffset.y + "px";
+                modalImg.style.cursor = isDragging ? "grabbing" : "grab";
+            } else {
+                modalImg.style.position = "";
+                modalImg.style.left = "";
+                modalImg.style.top = "";
+                modalImg.style.cursor = "zoom-in";
+                imgOffset = { x: 0, y: 0 }; // ← zde opět resetuj pozici při oddálení
+            }
+        }
+      
         // Otevření modalu při kliknutí na obrázek
         document.addEventListener('DOMContentLoaded', function() {
             // Hlavní galerie
@@ -274,7 +429,7 @@
                 if (fig) openModal(charts, Number(fig.dataset.index));
             });
         });
-
+      
         // Zavření modalu
         modalClose.addEventListener('click', () => {
             modal.classList.remove('active');
@@ -295,7 +450,7 @@
             if (e.key === "ArrowLeft") prevImage();
             if (e.key === "ArrowRight") nextImage();
         });
-
+      
         // Šipky
         function prevImage() {
             if (currentGallery.length === 0) return;
@@ -310,5 +465,5 @@
         modalPrev.addEventListener('click', prevImage);
         modalNext.addEventListener('click', nextImage);
     </script>
-</body>
+  </body>
 </html>
